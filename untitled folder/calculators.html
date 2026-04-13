@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятори | Цифровий Атлет</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .calculators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .calculator-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            transition: all 0.3s;
+        }
+
+        .calculator-card:hover {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .calculator-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .calculator-title {
+            font-family: 'Lora', serif;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+        .calculator-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Work Sans', sans-serif;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+            background: #F8F9F6;
+            border-radius: 12px;
+        }
+
+        .result-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: 300;
+            color: var(--accent);
+        }
+
+        .result-unit {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-left: 5px;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        .calculate-btn:hover {
+            background: #3A5A38;
+        }
+
+        .strength-level {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .level-beginner { background: #D4EDDA; color: #155724; }
+        .level-novice { background: #FFF3CD; color: #856404; }
+        .level-intermediate { background: #D1ECF1; color: #0C5460; }
+        .level-advanced { background: #F8D7DA; color: #721C24; }
+        .level-elite { background: #E2D5F1; color: #5B2C8E; }
+
+        .macro-timing-result {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .timing-meal {
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .timing-time {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        .timing-macros {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .tdee-adjustment {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .adjustment-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .adjustment-badge.cut { background: #F8D7DA; color: #721C24; }
+        .adjustment-badge.maintain { background: #D4EDDA; color: #155724; }
+        .adjustment-badge.bulk { background: #D1ECF1; color: #0C5460; }
+        .adjustment-badge.active {
+            box-shadow: 0 0 0 2px var(--accent);
+        }
+
+        .water-intake {
+            margin-top: 15px;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            color: white;
+        }
+
+        .water-amount {
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .info-tooltip {
+            display: inline-block;
+            margin-left: 5px;
+            color: var(--text-muted);
+            cursor: help;
+        }
+
+        @media (max-width: 768px) {
+            .calculators-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="container">
+        <div class="logo">Цифровий Атлет.</div>
+        <nav class="main-nav">
+            <a href="index.html">Філософія</a>
+            <a href="glossary.html">Термінологія</a>
+            <a href="anatomy.html">Анатомія</a>
+            <a href="biomechanics.html">Біомеханіка</a>
+            <a href="science.html">Біохімія</a>
+            <a href="plan.html" id="nav-protocol" style="display: none;">Протокол</a>
+            <a href="recovery.html">Безпека</a>
+            <a href="progress.html">Прогрес</a>
+            <a href="exercises.html">Вправи</a>
+            <a href="calculators.html" style="color: var(--accent);">Калькулятори</a>
+           <a href="nutrition-guide.html">Нутриціологія</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <article class="hero-article">
+        <p class="meta-info">Розділ 08 — Інструменти аналізу</p>
+        <h1 class="document-title">Спортивні калькулятори</h1>
+        <p class="lead-text">Науково обґрунтовані калькулятори для аналізу сили, метаболізму та планування тренувань.</p>
+    </article>
+
+    <div class="calculators-grid">
+        <!-- 1RM Calculator -->
+        <div class="calculator-card">
+            <div class="calculator-icon">💪</div>
+            <h2 class="calculator-title">1RM Калькулятор</h2>
+            <p class="calculator-desc">Розрахуйте свій одноповторний максимум (1RM) на основі ваги та кількості повторень.</p>
+            
+            <div class="input-group">
+                <label>Вага (кг) <span class="info-tooltip" title="Вага, яку ви підняли">ⓘ</span></label>
+                <input type="number" id="rm-weight" placeholder="100" step="0.5">
+            </div>
+            
+            <div class="input-group">
+                <label>Повторення <span class="info-tooltip" title="Кількість виконаних повторень">ⓘ</span></label>
+                <input type="number" id="rm-reps" placeholder="8" min="1" max="20">
+            </div>
+            
+            <div class="input-group">
+                <label>Формула</label>
+                <select id="rm-formula">
+                    <option value="brzycki">Бжицькі (найточніша)</option>
+                    <option value="epley">Еплі</option>
+                    <option value="lander">Лендер</option>
+                    <option value="lombardi">Ломбарді</option>
+                    <option value="mayhew">Мейх'ю</option>
+                </select>
+            </div>
+            
+            <button class="calculate-btn" onclick="calculate1RM()">Розрахувати 1RM</button>
+            
+            <div class="result-box" id="rm-result" style="display: none;">
+                <div class="result-label">Ваш 1RM</div>
+                <div>
+                    <span class="result-value" id="rm-value">0</span>
+                    <span class="result-unit">кг</span>
+                </div>
+                <div id="rm-percentages" style="margin-top: 15px; font-size: 0.85rem;"></div>
+            </div>
+        </div>
+
+        <!-- Wilks Score Calculator -->
+        <div class="calculator-card">
+            <div class="calculator-icon">🏆</div>
+            <h2 class="calculator-title">Wilks Score</h2>
+            <p class="calculator-desc">Коефіцієнт Вілкса для порівняння сили атлетів різної ваги у пауерліфтингу.</p>
+            
+            <div class="input-group">
+                <label>Стать</label>
+                <select id="wilks-gender">
+                    <option value="male">Чоловік</option>
+                    <option value="female">Жінка</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label>Вага тіла (кг)</label>
+                <input type="number" id="wilks-bodyweight" placeholder="80">
+            </div>
+            
+            <div class="input-group">
+                <label>Сума трьох вправ (кг)</label>
+                <input type="number" id="wilks-total" placeholder="500">
+            </div>
+            
+            <button class="calculate-btn" onclick="calculateWilks()">Розрахувати Wilks</button>
+            
+            <div class="result-box" id="wilks-result" style="display: none;">
+                <div class="result-label">Коефіцієнт Вілкса</div>
+                <div>
+                    <span class="result-value" id="wilks-value">0</span>
+                </div>
+                <div id="wilks-level" class="strength-level"></div>
+            </div>
+        </div>
+
+        <!-- TDEE Adjuster -->
+        <div class="calculator-card">
+            <div class="calculator-icon">🔥</div>
+            <h2 class="calculator-title">TDEE Калькулятор</h2>
+            <p class="calculator-desc">Розрахуйте денну витрату калорій та отримайте рекомендації для схуднення або набору маси.</p>
+            
+            <div class="input-group">
+                <label>Стать</label>
+                <select id="tdee-gender">
+                    <option value="male">Чоловік</option>
+                    <option value="female">Жінка</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label>Вага (кг)</label>
+                <input type="number" id="tdee-weight" placeholder="75">
+            </div>
+            
+            <div class="input-group">
+                <label>Зріст (см)</label>
+                <input type="number" id="tdee-height" placeholder="175">
+            </div>
+            
+            <div class="input-group">
+                <label>Вік</label>
+                <input type="number" id="tdee-age" placeholder="30">
+            </div>
+            
+            <div class="input-group">
+                <label>Активність</label>
+                <select id="tdee-activity">
+                    <option value="1.2">Сидячий спосіб життя</option>
+                    <option value="1.375">Легка активність (1-3/тиж)</option>
+                    <option value="1.55" selected>Середня активність (3-5/тиж)</option>
+                    <option value="1.725">Висока активність (6-7/тиж)</option>
+                    <option value="1.9">Екстремальна активність</option>
+                </select>
+            </div>
+            
+            <button class="calculate-btn" onclick="calculateTDEE()">Розрахувати TDEE</button>
+            
+            <div class="result-box" id="tdee-result" style="display: none;">
+                <div class="result-label">Ваш TDEE</div>
+                <div>
+                    <span class="result-value" id="tdee-value">0</span>
+                    <span class="result-unit">ккал/день</span>
+                </div>
+                
+                <div class="tdee-adjustment">
+                    <div style="margin-bottom: 10px;">Виберіть ціль:</div>
+                    <div id="tdee-goals">
+                        <span class="adjustment-badge cut" onclick="adjustTDEE('cut')">Схуднення (-500)</span>
+                        <span class="adjustment-badge maintain active" onclick="adjustTDEE('maintain')">Підтримка</span>
+                        <span class="adjustment-badge bulk" onclick="adjustTDEE('bulk')">Набір (+300)</span>
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <strong>Рекомендовано:</strong> <span id="tdee-adjusted">0</span> ккал/день
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Macro Timing Calculator -->
+        <div class="calculator-card">
+            <div class="calculator-icon">⏰</div>
+            <h2 class="calculator-title">Таймінг макросів</h2>
+            <p class="calculator-desc">Оптимальний розподіл білків, жирів та вуглеводів протягом дня.</p>
+            
+            <div class="input-group">
+                <label>Калорії на день</label>
+                <input type="number" id="timing-calories" placeholder="2500">
+            </div>
+            
+            <div class="input-group">
+                <label>Білки (г)</label>
+                <input type="number" id="timing-protein" placeholder="150">
+            </div>
+            
+            <div class="input-group">
+                <label>Жири (г)</label>
+                <input type="number" id="timing-fat" placeholder="70">
+            </div>
+            
+            <div class="input-group">
+                <label>Вуглеводи (г)</label>
+                <input type="number" id="timing-carbs" placeholder="300">
+            </div>
+            
+            <div class="input-group">
+                <label>Кількість прийомів їжі</label>
+                <select id="timing-meals">
+                    <option value="3">3 прийоми</option>
+                    <option value="4" selected>4 прийоми</option>
+                    <option value="5">5 прийомів</option>
+                    <option value="6">6 прийомів</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label>Час тренування</label>
+                <select id="timing-workout">
+                    <option value="morning">Ранок (7:00-9:00)</option>
+                    <option value="afternoon">День (12:00-14:00)</option>
+                    <option value="evening" selected>Вечір (17:00-19:00)</option>
+                </select>
+            </div>
+            
+            <button class="calculate-btn" onclick="calculateMacroTiming()">Розрахувати таймінг</button>
+            
+            <div class="result-box" id="timing-result" style="display: none;">
+                <div class="result-label">Розподіл макросів</div>
+                <div class="macro-timing-result" id="timing-schedule"></div>
+            </div>
+        </div>
+
+        <!-- Water Intake Calculator -->
+        <div class="calculator-card">
+            <div class="calculator-icon">💧</div>
+            <h2 class="calculator-title">Гідратація</h2>
+            <p class="calculator-desc">Розрахуйте необхідну кількість води на основі ваги та активності.</p>
+            
+            <div class="input-group">
+                <label>Вага (кг)</label>
+                <input type="number" id="water-weight" placeholder="75">
+            </div>
+            
+            <div class="input-group">
+                <label>Тривалість тренування (хв)</label>
+                <input type="number" id="water-workout" placeholder="60">
+            </div>
+            
+            <div class="input-group">
+                <label>Інтенсивність</label>
+                <select id="water-intensity">
+                    <option value="low">Низька</option>
+                    <option value="moderate" selected>Середня</option>
+                    <option value="high">Висока</option>
+                </select>
+            </div>
+            
+            <button class="calculate-btn" onclick="calculateWaterIntake()">Розрахувати</button>
+            
+            <div class="water-intake" id="water-result" style="display: none;">
+                <div style="margin-bottom: 10px;">💧 Денна норма води</div>
+                <div class="water-amount" id="water-amount">0</div>
+                <div>літрів</div>
+                <div style="margin-top: 15px; font-size: 0.9rem;">
+                    <div>🏠 У звичайний день: <span id="water-rest">0</span> л</div>
+                    <div>🏋️ У день тренування: <span id="water-training">0</span> л</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Body Fat Calculator -->
+        <div class="calculator-card">
+            <div class="calculator-icon">📊</div>
+            <h2 class="calculator-title">% Жиру (Navy Method)</h2>
+            <p class="calculator-desc">Розрахуйте відсоток жиру за методом ВМС США (обхвати).</p>
+            
+            <div class="input-group">
+                <label>Стать</label>
+                <select id="navy-gender">
+                    <option value="male">Чоловік</option>
+                    <option value="female">Жінка</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label>Зріст (см)</label>
+                <input type="number" id="navy-height" placeholder="175">
+            </div>
+            
+            <div class="input-group">
+                <label>Обхват шиї (см)</label>
+                <input type="number" id="navy-neck" placeholder="38">
+            </div>
+            
+            <div class="input-group">
+                <label>Обхват талії (см)</label>
+                <input type="number" id="navy-waist" placeholder="80">
+            </div>
+            
+            <div class="input-group" id="navy-hips-group" style="display: none;">
+                <label>Обхват стегон (см)</label>
+                <input type="number" id="navy-hips" placeholder="95">
+            </div>
+            
+            <button class="calculate-btn" onclick="calculateNavyBodyFat()">Розрахувати % жиру</button>
+            
+            <div class="result-box" id="navy-result" style="display: none;">
+                <div class="result-label">Відсоток жиру</div>
+                <div>
+                    <span class="result-value" id="navy-bf">0</span>
+                    <span class="result-unit">%</span>
+                </div>
+                <div id="navy-category" class="strength-level"></div>
+                <div style="margin-top: 10px; font-size: 0.85rem;">
+                    Жирова маса: <span id="navy-fatmass">0</span> кг<br>
+                    Суха маса: <span id="navy-lbm">0</span> кг
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="site-footer">
+    <div class="container" style="text-align: center; padding: 40px 0; border-top: 1px solid var(--border-color); color: var(--text-muted);">
+        Цифровий Атлет &copy; 2026 — Наукові калькулятори
+    </div>
+</footer>
+
+<script src="calculators.js"></script>
+<script src="global.js"></script>
+</body>
+</html>

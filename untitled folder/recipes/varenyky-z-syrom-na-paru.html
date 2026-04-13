@@ -1,0 +1,87 @@
+<!-- file: varenyky-z-syrom-na-paru.html -->
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вареники з сиром на пару | Цифровий Атлет</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .recipe-container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        .recipe-header { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+        .recipe-image { background: #E2E4DD; border-radius: 16px; height: 300px; background-image: url('images/varenyky-syr.png'); background-size: cover; background-position: center; }
+        .recipe-info h1 { font-family: 'Lora', serif; font-size: 2.5rem; margin: 0 0 10px 0; }
+        .nutrition-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 20px 0; }
+        .nutrition-item { background: #F2F3F0; padding: 15px; border-radius: 8px; text-align: center; }
+        .nutrition-value { font-size: 1.5rem; font-weight: 600; color: var(--accent); }
+        .nutrition-label { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); }
+        .ingredients-list, .instructions-list { background: white; border-radius: 12px; padding: 25px; margin: 30px 0; border: 1px solid var(--border-color); }
+        .ingredients-list h2, .instructions-list h2 { font-family: 'Lora', serif; margin-top: 0; }
+        .ingredient-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #ddd; }
+        .instructions-list ol { padding-left: 20px; }
+        .instructions-list li { margin-bottom: 15px; line-height: 1.6; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: var(--accent); text-decoration: none; }
+        @media (max-width: 768px) { .recipe-header { grid-template-columns: 1fr; gap: 20px; } }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="logo">Цифровий Атлет.</div>
+            <nav class="main-nav">
+                <a href="../index.html">Філософія</a>
+                <a href="../anatomy.html">Анатомія</a>
+                <a href="../biomechanics.html">Біомеханіка</a>
+                <a href="../science.html">Біохімія</a>
+                <a href="../plan.html">Протокол</a>
+                <a href="../recovery.html">Безпека</a>
+            </nav>
+        </div>
+    </header>
+    <main class="recipe-container">
+        <a href="../plan.html" class="back-link">← Назад до протоколу</a>
+        <div class="recipe-header">
+            <div class="recipe-info">
+                <h1>Вареники з сиром на пару</h1>
+                <p>Дієтична версія улюбленої страви: ніжне тісто без зайвого жиру та начинка з кисломолочного сиру. Готуються на пару, що зберігає максимум корисних речовин.</p>
+                <div class="nutrition-grid">
+                    <div class="nutrition-item"><div class="nutrition-value">380</div><div class="nutrition-label">Ккал</div></div>
+                    <div class="nutrition-item"><div class="nutrition-value">24г</div><div class="nutrition-label">Білки</div></div>
+                    <div class="nutrition-item"><div class="nutrition-value">10г</div><div class="nutrition-label">Жири</div></div>
+                    <div class="nutrition-item"><div class="nutrition-value">48г</div><div class="nutrition-label">Вуглеводи</div></div>
+                </div>
+            </div>
+            <div class="recipe-image"></div>
+        </div>
+        <div class="ingredients-list">
+            <h2>Інгредієнти (на 2 порції)</h2>
+            <div class="ingredient-item"><span>Кисломолочний сир 5%</span><span>200 г</span></div>
+            <div class="ingredient-item"><span>Борошно пшеничне (або суміш з цільнозерновим)</span><span>150 г</span></div>
+            <div class="ingredient-item"><span>Яйце</span><span>1 шт</span></div>
+            <div class="ingredient-item"><span>Вода тепла</span><span>50 мл</span></div>
+            <div class="ingredient-item"><span>Сіль, цукор (або замінник)</span><span>дрібка</span></div>
+            <div class="ingredient-item"><span>Сметана 15% для подачі</span><span>50 г</span></div>
+        </div>
+        <div class="instructions-list">
+            <h2>Приготування</h2>
+            <ol>
+                <li><strong>Тісто:</strong> Змішайте борошно, яйце, воду, сіль. Замісіть еластичне тісто, дайте відпочити 20 хв.</li>
+                <li><strong>Начинка:</strong> Сир розімніть, додайте дрібку солі та цукру.</li>
+                <li><strong>Ліплення:</strong> Розкачайте тісто, виріжте кружальця, викладіть начинку, защипніть краї.</li>
+                <li><strong>На пару:</strong> Готуйте в пароварці 10-12 хв.</li>
+                <li><strong>Подача:</strong> Подавайте зі сметаною або грецьким йогуртом.</li>
+            </ol>
+        </div>
+        <div class="ingredients-list" style="margin-top: 20px;">
+            <h2>💡 Порада атлета</h2>
+            <p>Для збільшення кількості білка додайте в начинку 20 г ванільного протеїну (зменшивши трохи борошна). Вареники можна заморозити сирими і готувати за потреби.</p>
+        </div>
+    </main>
+    <footer class="site-footer">
+        <div class="container" style="text-align: center; padding: 40px 0; border-top: 1px solid var(--border-color); color: var(--text-muted);">
+            Цифровий Атлет &copy; 2026 — Рецепти для здоров'я
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прогрес | Цифровий Атлет</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .progress-dashboard {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .tracking-panel {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            padding: 30px;
+        }
+        
+        .charts-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            padding: 25px;
+        }
+        
+        .chart-title {
+            font-family: 'Lora', serif;
+            font-size: 1.3rem;
+            margin: 0 0 20px 0;
+            color: var(--text-main);
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Work Sans', sans-serif;
+        }
+        
+        .measurement-history {
+            margin-top: 30px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .history-item {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .history-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        
+        .history-values {
+            font-weight: 500;
+        }
+        
+        .delete-entry {
+            color: #c0392b;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+        
+        .delete-entry:hover {
+            opacity: 1;
+        }
+        
+        .stats-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: #F8F9F6;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 300;
+            color: var(--accent);
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+        
+        .trend-indicator {
+            display: inline-block;
+            margin-left: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .trend-up { color: #27ae60; }
+        .trend-down { color: #e74c3c; }
+        .trend-stable { color: #f39c12; }
+        
+        .goal-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .goal-item {
+            margin-bottom: 15px;
+        }
+        
+        .goal-progress {
+            height: 8px;
+            background: #E2E4DD;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        
+        .goal-progress-bar {
+            height: 100%;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+        
+        .tab-navigation {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: 'Work Sans', sans-serif;
+            color: var(--text-muted);
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Work Sans', sans-serif;
+            margin-top: 10px;
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn-secondary {
+            background: #6B7262;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Work Sans', sans-serif;
+        }
+        
+        .btn-secondary:hover {
+            background: #5A6252;
+        }
+        
+        @media (max-width: 900px) {
+            .progress-dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .measurement-type-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .type-btn {
+            flex: 1;
+            padding: 8px;
+            background: #F2F3F0;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        
+        .type-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="container">
+        <div class="logo">Цифровий Атлет.</div>
+        <nav class="main-nav">
+            <a href="index.html">Філософія</a>
+            <a href="glossary.html">Термінологія</a>
+            <a href="anatomy.html">Анатомія</a>
+            <a href="biomechanics.html">Біомеханіка</a>
+            <a href="science.html">Біохімія</a>
+            <a href="plan.html" id="nav-protocol" style="display: none;">Протокол</a>
+            <a href="recovery.html">Безпека</a>
+            <a href="progress.html" style="color: var(--accent);">Прогрес</a>
+            <a href="exercises.html">Вправи</a>
+            <a href="nutrition-guide.html">Нутриціологія</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <article class="hero-article">
+        <p class="meta-info">Розділ 06 — Моніторинг та Аналітика</p>
+        <h1 class="document-title">Трекер Прогресу</h1>
+        <p class="lead-text">Відстежуйте зміни композиції тіла, силові показники та досягайте цілей з науково обґрунтованим підходом.</p>
+    </article>
+
+    <div class="progress-dashboard">
+        <!-- Left Panel - Data Entry -->
+        <div class="tracking-panel">
+            <div class="tab-navigation">
+                <button class="tab-btn active" data-tab="body">🏋️ Тіло</button>
+                <button class="tab-btn" data-tab="strength">💪 Сила</button>
+                <button class="tab-btn" data-tab="goals">🎯 Цілі</button>
+            </div>
+
+            <!-- Body Measurements Tab -->
+            <div id="tab-body" class="tab-content">
+                <div class="measurement-type-selector">
+                    <button class="type-btn active" data-type="weight">Вага</button>
+                    <button class="type-btn" data-type="bodyfat">% Жиру</button>
+                    <button class="type-btn" data-type="measurements">Об'єми</button>
+                </div>
+
+                <div id="weight-inputs">
+                    <div class="input-group">
+                        <label>Дата</label>
+                        <input type="date" id="measurement-date" class="custom-input">
+                    </div>
+                    <div class="input-group">
+                        <label>Вага (кг)</label>
+                        <input type="number" id="weight-input" step="0.1" placeholder="75.5">
+                    </div>
+                </div>
+
+                <div id="bodyfat-inputs" style="display:none;">
+                    <div class="input-group">
+                        <label>Дата</label>
+                        <input type="date" id="bf-date" class="custom-input">
+                    </div>
+                    <div class="input-group">
+                        <label>% Жиру</label>
+                        <input type="number" id="bodyfat-input" step="0.1" placeholder="15.5">
+                    </div>
+                </div>
+
+                <div id="measurements-inputs" style="display:none;">
+                    <div class="input-group">
+                        <label>Дата</label>
+                        <input type="date" id="circ-date" class="custom-input">
+                    </div>
+                    <div class="input-group">
+                        <label>Груди (см)</label>
+                        <input type="number" id="chest-input" step="0.5" placeholder="100">
+                    </div>
+                    <div class="input-group">
+                        <label>Талія (см)</label>
+                        <input type="number" id="waist-input" step="0.5" placeholder="80">
+                    </div>
+                    <div class="input-group">
+                        <label>Біцепс (см)</label>
+                        <input type="number" id="biceps-input" step="0.5" placeholder="35">
+                    </div>
+                    <div class="input-group">
+                        <label>Стегно (см)</label>
+                        <input type="number" id="thigh-input" step="0.5" placeholder="55">
+                    </div>
+                </div>
+
+                <button class="btn-action" id="save-measurement">💾 Зберегти вимірювання</button>
+
+                <div class="stats-summary">
+                    <div class="stat-card">
+                        <div class="stat-value" id="current-weight">--</div>
+                        <div class="stat-label">Поточна вага</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="weight-change">--</div>
+                        <div class="stat-label">Зміна за місяць</div>
+                    </div>
+                </div>
+
+                <div class="measurement-history" id="weight-history">
+                    <h4 style="font-family: 'Lora', serif; margin-bottom: 15px;">Історія вимірювань</h4>
+                    <div id="history-list"></div>
+                </div>
+            </div>
+
+            <!-- Strength Tab -->
+            <div id="tab-strength" class="tab-content" style="display:none;">
+                <div class="input-group">
+                    <label>Вправа</label>
+                    <select id="exercise-select" class="custom-input">
+                        <option value="bench">Жим лежачи</option>
+                        <option value="squat">Присідання</option>
+                        <option value="deadlift">Станова тяга</option>
+                        <option value="ohp">Жим стоячи</option>
+                        <option value="pullup">Підтягування</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Дата</label>
+                    <input type="date" id="strength-date" class="custom-input">
+                </div>
+                <div class="input-group">
+                    <label>Вага (кг)</label>
+                    <input type="number" id="strength-weight" step="0.5" placeholder="100">
+                </div>
+                <div class="input-group">
+                    <label>Повторення</label>
+                    <input type="number" id="strength-reps" placeholder="8">
+                </div>
+                <button class="btn-action" id="save-strength">💾 Зберегти підхід</button>
+
+                <div class="stats-summary">
+                    <div class="stat-card">
+                        <div class="stat-value" id="estimated-1rm">--</div>
+                        <div class="stat-label">Розрахунковий 1RM</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Goals Tab -->
+            <div id="tab-goals" class="tab-content" style="display:none;">
+                <div class="goal-section">
+                    <h4 style="font-family: 'Lora', serif; margin-bottom: 15px;">Встановіть цілі</h4>
+                    <div class="input-group">
+                        <label>Цільова вага (кг)</label>
+                        <input type="number" id="goal-weight" step="0.1">
+                    </div>
+                    <div class="input-group">
+                        <label>Цільовий % жиру</label>
+                        <input type="number" id="goal-bodyfat" step="0.1">
+                    </div>
+                    <div class="input-group">
+                        <label>Дедлайн</label>
+                        <input type="date" id="goal-deadline">
+                    </div>
+                    <button class="btn-action" id="save-goals">🎯 Зберегти цілі</button>
+                </div>
+
+                <div class="goal-section">
+                    <h4 style="font-family: 'Lora', serif; margin-bottom: 15px;">Прогрес до цілей</h4>
+                    <div class="goal-item">
+                        <div>Вага <span id="weight-progress-text">0/0 кг</span></div>
+                        <div class="goal-progress">
+                            <div class="goal-progress-bar" id="weight-goal-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="goal-item">
+                        <div>% Жиру <span id="bf-progress-text">0/0%</span></div>
+                        <div class="goal-progress">
+                            <div class="goal-progress-bar" id="bf-goal-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="export-buttons">
+                <button class="btn-secondary" id="export-data">📊 Експорт даних</button>
+                <button class="btn-secondary" id="import-data">📂 Імпорт</button>
+            </div>
+            <button class="btn-danger" id="clear-all-data">🗑️ Очистити всі дані</button>
+        </div>
+
+        <!-- Right Panel - Charts -->
+        <div class="charts-panel">
+            <div class="chart-container">
+                <h3 class="chart-title">Динаміка ваги</h3>
+                <canvas id="weight-chart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <h3 class="chart-title">Композиція тіла</h3>
+                <canvas id="bodyfat-chart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <h3 class="chart-title">Силові показники</h3>
+                <canvas id="strength-chart"></canvas>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="site-footer">
+    <div class="container" style="text-align: center; padding: 40px 0; border-top: 1px solid var(--border-color); color: var(--text-muted);">
+        Цифровий Атлет &copy; 2026 — Науковий підхід до прогресу
+    </div>
+</footer>
+
+<!-- Hidden file input for import -->
+<input type="file" id="file-import" accept=".json" style="display: none;">
+
+<script src="progress.js"></script>
+<script src="global.js"></script>
+</body>
+</html>
