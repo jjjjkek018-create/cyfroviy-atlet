@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бібліотека вправ | Цифровий Атлет</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        .library-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 40px;
+            margin: 40px 0;
+        }
+        
+        .filters-panel {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .filter-section {
+            margin-bottom: 30px;
+        }
+        
+        .filter-section h4 {
+            font-family: 'Lora', serif;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            color: var(--text-main);
+            font-weight: 400;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-family: 'Work Sans', sans-serif;
+            margin-bottom: 20px;
+        }
+        
+        .filter-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+        
+        .filter-item input {
+            accent-color: var(--accent);
+        }
+        
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .filter-tag {
+            padding: 6px 14px;
+            background: #F2F3F0;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        
+        .filter-tag.active {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .exercises-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .exercise-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .exercise-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        
+        .exercise-header {
+            padding: 20px 20px 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .exercise-name {
+            font-family: 'Lora', serif;
+            font-size: 1.1rem;
+            margin: 0 0 10px 0;
+            color: var(--text-main);
+        }
+        
+        .exercise-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+        
+        .exercise-body {
+            padding: 15px 20px 20px;
+        }
+        
+        .muscle-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 15px;
+        }
+        
+        .muscle-tag {
+            padding: 3px 10px;
+            background: #F2F3F0;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        
+        .muscle-tag.primary {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .results-count {
+            margin-bottom: 20px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+        
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px;
+            color: var(--text-muted);
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal-container {
+            background: white;
+            border-radius: 16px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+        }
+        
+        .modal-header {
+            padding: 30px 30px 20px;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        
+        .modal-close:hover {
+            background: #F2F3F0;
+        }
+        
+        .modal-title {
+            font-family: 'Lora', serif;
+            font-size: 1.8rem;
+            margin: 0 0 10px 0;
+            padding-right: 40px;
+        }
+        
+        .modal-body {
+            padding: 30px;
+        }
+        
+        .instruction-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 30px 0;
+        }
+        
+        .instruction-item {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .instruction-number {
+            width: 28px;
+            height: 28px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+        
+        .tips-box {
+            background: #F8F9F6;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+        
+        .tips-box h4 {
+            font-family: 'Lora', serif;
+            margin: 0 0 12px 0;
+            color: var(--accent);
+            font-weight: 400;
+        }
+        
+        .tips-box ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .tips-box li {
+            margin-bottom: 8px;
+            color: var(--text-muted);
+        }
+        
+        .mistakes-box {
+            background: #FDF6F0;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            border-left: 3px solid #c0392b;
+        }
+        
+        .mistakes-box h4 {
+            font-family: 'Lora', serif;
+            margin: 0 0 12px 0;
+            color: #c0392b;
+            font-weight: 400;
+        }
+        
+        .btn-reset {
+            width: 100%;
+            padding: 12px;
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Work Sans', sans-serif;
+            margin-top: 10px;
+        }
+        
+        .btn-reset:hover {
+            background: #F2F3F0;
+        }
+        
+        @media (max-width: 768px) {
+            .library-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters-panel {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="container">
+        <div class="logo">Цифровий Атлет.</div>
+        <nav class="main-nav">
+            <a href="index.html">Філософія</a>
+            <a href="glossary.html">Термінологія</a>
+            <a href="anatomy.html">Анатомія</a>
+            <a href="biomechanics.html">Біомеханіка</a>
+            <a href="science.html">Біохімія</a>
+            <a href="plan.html" id="nav-protocol" style="display: none;">Протокол</a>
+            <a href="recovery.html">Безпека</a>
+            <a href="progress.html">Прогрес</a>
+            <a href="exercises.html" style="color: var(--accent);">Вправи</a>
+            <a href="calculators.html">Калькулятори</a>
+            <a href="nutrition-guide.html">Нутриціологія</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <article class="hero-article">
+        <p class="meta-info">Розділ 07 &mdash; Кінезіологічний довідник</p>
+        <h1 class="document-title">Бібліотека вправ</h1>
+        <p class="lead-text">Структурована база рухів з аналізом м'язових груп, техніки виконання та типових помилок.</p>
+    </article>
+
+    <div class="library-layout">
+        <aside class="filters-panel">
+            <input type="text" class="search-input" id="search-input" placeholder="Пошук за назвою...">
+            
+            <div class="filter-section">
+                <h4>М'язові групи</h4>
+                <div class="filter-list" id="muscle-filters"></div>
+            </div>
+            
+            <div class="filter-section">
+                <h4>Обладнання</h4>
+                <div class="filter-tags" id="equipment-filters"></div>
+            </div>
+            
+            <div class="filter-section">
+                <h4>Рівень складності</h4>
+                <div class="filter-tags" id="difficulty-filters"></div>
+            </div>
+            
+            <button class="btn-reset" id="reset-filters">Скинути фільтри</button>
+        </aside>
+        
+        <div>
+            <div class="results-count" id="results-count"></div>
+            <div class="exercises-grid" id="exercises-grid"></div>
+        </div>
+    </div>
+</main>
+
+<div class="modal-overlay" id="exercise-modal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <button class="modal-close" id="modal-close-btn">&times;</button>
+            <div class="muscle-tags" id="modal-muscles"></div>
+            <h2 class="modal-title" id="modal-title"></h2>
+            <div class="exercise-meta" id="modal-meta"></div>
+        </div>
+        <div class="modal-body" id="modal-body"></div>
+    </div>
+</div>
+
+<footer class="site-footer">
+    <div class="container">
+        Цифровий Атлет &copy; 2026 — Кінезіологічний довідник
+    </div>
+</footer>
+
+<script>
+(function() {
+    // Exercise database
+    const exerciseDatabase = [
+        { id: 'bench-press', name: 'Жим штанги лежачи', nameEn: 'Bench Press', primaryMuscle: 'chest', secondaryMuscles: ['triceps', 'shoulders'], equipment: 'barbell', difficulty: 'intermediate', instructions: ['Положення на лаві: ступні притиснуті до підлоги, лопатки зведені, природний прогин у попереку.', 'Хват на ширині 1.5–2 ширини плечей. Зняття штанги зі стійок на прямі руки.', 'Опускання штанги до нижньої точки грудної клітки. Лікті під кутом 45–75° до корпусу.', 'Контакт з грудьми — без відбиття. Потужне витискання у вихідне положення.'], tips: ['Фіксація лопаток у зведеному положенні протягом усього підходу.', 'Створення арки в грудному відділі (не в поперековому).', 'Контрольована ексцентрична фаза (2–3 секунди).', 'Видих на концентричній фазі.'], mistakes: ['Відрив тазу від лави.', 'Розведення ліктів на 90° (підвищує навантаження на плечовий суглоб).', 'Асиметричне опускання штанги.'] },
+        { id: 'incline-dumbbell-press', name: 'Жим гантелей на похилій лаві', nameEn: 'Incline Dumbbell Press', primaryMuscle: 'chest', secondaryMuscles: ['triceps', 'shoulders'], equipment: 'dumbbell', difficulty: 'intermediate', instructions: ['Кут нахилу лави 30–45°. Гантелі на стегнах, фіксація положення тіла.', 'Підйом гантелей до рівня грудей, долоні спрямовані вперед.', 'Опускання гантелей до рівня верхньої частини грудей, лікті під кутом ~45°.', 'Потужне витискання вгору без зведення гантелей у верхній точці.'], tips: ['Збереження постійного кута в ліктьових суглобах.', 'Контроль гантелей у нижній точці (розтягнення грудних м\'язів).', 'Уникати зіткнення гантелей — це знімає напругу з цільових м\'язів.'], mistakes: ['Надмірний кут нахилу лави (>45°) — переносить навантаження на дельтоподібні.', 'Опускання ліктів нижче рівня лави.', 'Використання інерції при підйомі.'] },
+        { id: 'dips', name: 'Віджимання на брусах', nameEn: 'Dips', primaryMuscle: 'chest', secondaryMuscles: ['triceps', 'shoulders'], equipment: 'bodyweight', difficulty: 'intermediate', instructions: ['Упор на прямих руках на брусах, плечі опущені.', 'Нахил корпусу вперед для акценту на грудні м\'язи.', 'Опускання до кута 90° у ліктьових суглобах.', 'Потужне витискання у вихідне положення.'], tips: ['Не опускатися нижче 90° для захисту плечових суглобів.', 'Контрольований рух без розгойдування.', 'Для прогресу — додавання ваги через пояс.'], mistakes: ['Надмірна глибина опускання.', 'Підйом плечей до вух.', 'Розгойдування корпусу.'] },
+        { id: 'pull-ups', name: 'Підтягування на перекладині', nameEn: 'Pull-ups', primaryMuscle: 'back', secondaryMuscles: ['biceps', 'shoulders'], equipment: 'bodyweight', difficulty: 'intermediate', instructions: ['Хват пронований (долоні від себе) на ширині 1.5 плечей.', 'Вихідне положення: повний вис, лопатки розведені.', 'Ініціація руху з приведення лопаток та опускання плечей.', 'Підйом до перетину підборіддям лінії перекладини.', 'Контрольоване опускання з повним розгинанням ліктів.'], tips: ['Уникати розгойдування корпусу.', 'Фокус на скороченні найширших м\'язів.', 'Повна амплітуда від вису до підборіддя над перекладиною.'], mistakes: ['Неповна амплітуда.', 'Використання інерції.', 'Підйом плечей до вух.'] },
+        { id: 'barbell-row', name: 'Тяга штанги в нахилі', nameEn: 'Barbell Row', primaryMuscle: 'back', secondaryMuscles: ['biceps', 'shoulders'], equipment: 'barbell', difficulty: 'intermediate', instructions: ['Нахил корпусу під кутом 45–60°, спина пряма.', 'Хват на ширині плечей, пронований.', 'Тяга штанги до нижньої частини живота за рахунок зведення лопаток.', 'Фіксація у верхній точці.', 'Контрольоване опускання.'], tips: ['Нерухоме положення корпусу.', 'Рух ліктів вздовж корпусу.', 'Уникати ривків.'], mistakes: ['Округлення спини.', 'Витягування шиї вперед.', 'Надмірна вага.'] },
+        { id: 'lat-pulldown', name: 'Тяга верхнього блоку', nameEn: 'Lat Pulldown', primaryMuscle: 'back', secondaryMuscles: ['biceps', 'shoulders'], equipment: 'cable', difficulty: 'beginner', instructions: ['Фіксація стегон валиками, широкий хват.', 'Тяга рукоятки до верхньої частини грудей.', 'Зведення лопаток у нижній точці.', 'Контрольоване повернення.'], tips: ['Відхилення корпусу не більше 10–15°.', 'Відчуття роботи найширших м\'язів.', 'Уникати ривків.'], mistakes: ['Надмірний нахил назад.', 'Використання інерції.', 'Неповна амплітуда.'] },
+        { id: 'squat', name: 'Присідання зі штангою', nameEn: 'Barbell Squat', primaryMuscle: 'legs', secondaryMuscles: ['core', 'back'], equipment: 'barbell', difficulty: 'intermediate', instructions: ['Штанга на верхній частині трапецієподібних м\'язів.', 'Ноги на ширині плечей, носки розгорнуті на 15–30°.', 'Опускання з відведенням тазу назад.', 'Глибина: стегна паралельні підлозі або нижче.', 'Підйом за рахунок розгинання колін та тазу.'], tips: ['Повна стопа на опорі.', 'Коліна в напрямку носків.', 'Грудна клітка розправлена.', 'Вдих перед опусканням, видих у верхній третині.'], mistakes: ['Відрив п\'ят.', 'Зведення колін всередину.', 'Надмірний нахил корпусу.', 'Округлення попереку.'] },
+        { id: 'deadlift', name: 'Станова тяга', nameEn: 'Deadlift', primaryMuscle: 'legs', secondaryMuscles: ['back', 'core'], equipment: 'barbell', difficulty: 'advanced', instructions: ['Ноги на ширині тазу, штанга над серединою стопи.', 'Нахил з прямою спиною, хват на ширині плечей.', 'Напруження кора, розправлення грудної клітки.', 'Підйом штанги вздовж гомілок.', 'Повне випрямлення з фіксацією.'], tips: ['Штанга торкається ніг протягом усього руху.', 'Лопатки над штангою.', 'Початок руху з ніг.', 'Уникнення перерозгинання попереку.'], mistakes: ['Округлення спини.', 'Віддалення штанги від ніг.', 'Ривок на старті.', 'Згинання рук у ліктях.'] },
+        { id: 'lunges', name: 'Випади з гантелями', nameEn: 'Dumbbell Lunges', primaryMuscle: 'legs', secondaryMuscles: ['core'], equipment: 'dumbbell', difficulty: 'beginner', instructions: ['Гантелі в опущених руках.', 'Крок вперед з опусканням до кута 90° в обох колінах.', 'Заднє коліно майже торкається підлоги.', 'Повернення у вихідне положення.'], tips: ['Корпус вертикально.', 'Переднє коліно не виходить за носок.', 'Чергування ніг.'], mistakes: ['Нахил корпусу вперед.', 'Коліно виходить за носок.', 'Втрата рівноваги.'] },
+        { id: 'overhead-press', name: 'Жим штанги стоячи', nameEn: 'Overhead Press', primaryMuscle: 'shoulders', secondaryMuscles: ['triceps', 'core'], equipment: 'barbell', difficulty: 'intermediate', instructions: ['Штанга на передніх дельтах, хват на ширині плечей.', 'Напруження кора та сідниць.', 'Вертикальне витискання з відведенням голови.', 'Голова проходить між руками у верхній точці.', 'Контрольоване опускання.'], tips: ['Уникнення надмірного прогину в попереку.', 'Лікті під штангою на початку.', 'Без допомоги ніг.'], mistakes: ['Відхилення корпусу назад.', 'Широкий хват.', 'Неповне розгинання ліктів.'] },
+        { id: 'lateral-raises', name: 'Розведення гантелей стоячи', nameEn: 'Lateral Raises', primaryMuscle: 'shoulders', secondaryMuscles: [], equipment: 'dumbbell', difficulty: 'beginner', instructions: ['Гантелі в опущених руках, лікті трохи зігнуті.', 'Підйом гантелей в сторони до рівня плечей.', 'Мізинці вище великих пальців у верхній точці.', 'Плавне опускання.'], tips: ['Нерухомий корпус.', 'Помірна вага для контролю.', 'Не піднімати вище рівня плечей.'], mistakes: ['Розгойдування корпусу.', 'Надмірна вага.', 'Підйом вище плечей.'] },
+        { id: 'bicep-curls', name: 'Згинання рук з гантелями', nameEn: 'Dumbbell Bicep Curls', primaryMuscle: 'arms', secondaryMuscles: [], equipment: 'dumbbell', difficulty: 'beginner', instructions: ['Гантелі в опущених руках, долоні вперед.', 'Лікті притиснуті до корпусу.', 'Згинання рук з супінацією.', 'Пікове скорочення у верхній точці.', 'Повільне опускання.'], tips: ['Уникнення розгойдування.', 'Фіксація ліктів.', 'Повна амплітуда.'], mistakes: ['Використання інерції.', 'Неповне розгинання.', 'Підйом ліктів вперед.'] },
+        { id: 'tricep-extensions', name: 'Французький жим', nameEn: 'Tricep Extensions', primaryMuscle: 'arms', secondaryMuscles: [], equipment: 'dumbbell', difficulty: 'intermediate', instructions: ['Положення лежачи, гантель на прямих руках над грудьми.', 'Згинання ліктів, опускання гантелі до лоба.', 'Лікті нерухомі, спрямовані вгору.', 'Потужне випрямлення рук.'], tips: ['Фіксоване положення ліктів.', 'Контроль в обидві сторони.', 'Уникнення розведення ліктів.'], mistakes: ['Розведення ліктів.', 'Надмірна вага.', 'Неповне розгинання.'] },
+        { id: 'plank', name: 'Планка', nameEn: 'Plank', primaryMuscle: 'core', secondaryMuscles: ['shoulders'], equipment: 'bodyweight', difficulty: 'beginner', instructions: ['Упор на передпліччях, лікті під плечима.', 'Тіло — пряма лінія від п\'ят до голови.', 'Напруження м\'язів живота та сідниць.', 'Утримання положення з рівномірним диханням.'], tips: ['Підкручування тазу.', 'Погляд у підлогу.', 'Рівномірний розподіл ваги.'], mistakes: ['Провисання тазу.', 'Підняття тазу вгору.', 'Затримка дихання.'] },
+        { id: 'russian-twists', name: 'Російський твіст', nameEn: 'Russian Twists', primaryMuscle: 'core', secondaryMuscles: [], equipment: 'bodyweight', difficulty: 'intermediate', instructions: ['Положення сидячи, корпус відхилений назад.', 'Ноги підняті, V-подібна форма.', 'Повороти корпусу вліво-вправо.', 'Руки перед собою.'], tips: ['Контрольований рух.', 'Пряма спина.', 'Рівномірне дихання.'], mistakes: ['Округлення спини.', 'Швидкий темп.', 'Опускання ніг.'] }
+    ];
+    
+    const muscleNames = { chest: 'Грудні', back: 'Спина', legs: 'Ноги', shoulders: 'Плечі', arms: 'Руки', core: 'Кор', triceps: 'Трицепс', biceps: 'Біцепс' };
+    const equipmentNames = { barbell: 'Штанга', dumbbell: 'Гантелі', bodyweight: 'Власна вага', machine: 'Тренажер', cable: 'Кросовер' };
+    const difficultyNames = { beginner: 'Початковий', intermediate: 'Середній', advanced: 'Просунутий' };
+    
+    let filters = { search: '', muscles: new Set(), equipment: new Set(), difficulty: null };
+    
+    const searchInput = document.getElementById('search-input');
+    const exercisesGrid = document.getElementById('exercises-grid');
+    const resultsCount = document.getElementById('results-count');
+    const modal = document.getElementById('exercise-modal');
+    
+    // Build filters
+    function buildFilters() {
+        const muscleFilters = document.getElementById('muscle-filters');
+        muscleFilters.innerHTML = '';
+        Object.entries(muscleNames).filter(([k]) => ['chest', 'back', 'legs', 'shoulders', 'arms', 'core'].includes(k)).forEach(([value, label]) => {
+            const labelEl = document.createElement('label');
+            labelEl.className = 'filter-item';
+            labelEl.innerHTML = `<input type="checkbox" value="${value}"> ${label}`;
+            muscleFilters.appendChild(labelEl);
+            labelEl.querySelector('input').addEventListener('change', (e) => {
+                if (e.target.checked) filters.muscles.add(value);
+                else filters.muscles.delete(value);
+                renderExercises();
+            });
+        });
+        
+        const equipmentFilters = document.getElementById('equipment-filters');
+        equipmentFilters.innerHTML = '';
+        Object.entries(equipmentNames).forEach(([value, label]) => {
+            const tag = document.createElement('span');
+            tag.className = 'filter-tag';
+            tag.dataset.equipment = value;
+            tag.textContent = label;
+            tag.addEventListener('click', () => {
+                if (filters.equipment.has(value)) { filters.equipment.delete(value); tag.classList.remove('active'); }
+                else { filters.equipment.add(value); tag.classList.add('active'); }
+                renderExercises();
+            });
+            equipmentFilters.appendChild(tag);
+        });
+        
+        const difficultyFilters = document.getElementById('difficulty-filters');
+        difficultyFilters.innerHTML = '';
+        Object.entries(difficultyNames).forEach(([value, label]) => {
+            const tag = document.createElement('span');
+            tag.className = 'filter-tag';
+            tag.dataset.difficulty = value;
+            tag.textContent = label;
+            tag.addEventListener('click', () => {
+                if (filters.difficulty === value) { filters.difficulty = null; tag.classList.remove('active'); }
+                else { difficultyFilters.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active')); filters.difficulty = value; tag.classList.add('active'); }
+                renderExercises();
+            });
+            difficultyFilters.appendChild(tag);
+        });
+    }
+    
+    function filterExercises() {
+        return exerciseDatabase.filter(ex => {
+            if (filters.search && !ex.name.toLowerCase().includes(filters.search) && !ex.nameEn.toLowerCase().includes(filters.search)) return false;
+            if (filters.muscles.size > 0 && ![...filters.muscles].some(m => [ex.primaryMuscle, ...ex.secondaryMuscles].includes(m))) return false;
+            if (filters.equipment.size > 0 && !filters.equipment.has(ex.equipment)) return false;
+            if (filters.difficulty && ex.difficulty !== filters.difficulty) return false;
+            return true;
+        });
+    }
+    
+    function renderExercises() {
+        const filtered = filterExercises();
+        resultsCount.textContent = `Показано вправ: ${filtered.length}`;
+        
+        if (filtered.length === 0) {
+            exercisesGrid.innerHTML = '<div class="no-results">За заданими фільтрами вправ не знайдено.</div>';
+            return;
+        }
+        
+        exercisesGrid.innerHTML = filtered.map(ex => `
+            <div class="exercise-card" data-id="${ex.id}">
+                <div class="exercise-header">
+                    <h3 class="exercise-name">${ex.name}</h3>
+                    <div class="exercise-meta"><span>${equipmentNames[ex.equipment]}</span><span>${difficultyNames[ex.difficulty]}</span></div>
+                </div>
+                <div class="exercise-body">
+                    <div class="muscle-tags">
+                        <span class="muscle-tag primary">${muscleNames[ex.primaryMuscle]}</span>
+                        ${ex.secondaryMuscles.map(m => `<span class="muscle-tag">${muscleNames[m]}</span>`).join('')}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        
+        document.querySelectorAll('.exercise-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const ex = exerciseDatabase.find(e => e.id === card.dataset.id);
+                if (!ex) return;
+                document.getElementById('modal-title').textContent = ex.name;
+                document.getElementById('modal-muscles').innerHTML = `<span class="muscle-tag primary">${muscleNames[ex.primaryMuscle]}</span>${ex.secondaryMuscles.map(m => `<span class="muscle-tag">${muscleNames[m]}</span>`).join('')}`;
+                document.getElementById('modal-meta').innerHTML = `<span>${equipmentNames[ex.equipment]}</span><span>${difficultyNames[ex.difficulty]}</span>`;
+                document.getElementById('modal-body').innerHTML = `
+                    <div style="margin-bottom:25px"><p class="meta-info" style="margin-bottom:15px">Техніка виконання</p><ul class="instruction-list">${ex.instructions.map((s,i) => `<li class="instruction-item"><span class="instruction-number">${i+1}</span><span>${s}</span></li>`).join('')}</ul></div>
+                    <div class="tips-box"><h4>Ключові моменти</h4><ul>${ex.tips.map(t => `<li>${t}</li>`).join('')}</ul></div>
+                    ${ex.mistakes ? `<div class="mistakes-box"><h4>Типові помилки</h4><ul>${ex.mistakes.map(m => `<li>${m}</li>`).join('')}</ul></div>` : ''}
+                `;
+                modal.classList.add('active');
+            });
+        });
+    }
+    
+    // Init
+    buildFilters();
+    renderExercises();
+    
+    searchInput.addEventListener('input', e => { filters.search = e.target.value.toLowerCase(); renderExercises(); });
+    document.getElementById('reset-filters').addEventListener('click', () => {
+        filters = { search: '', muscles: new Set(), equipment: new Set(), difficulty: null };
+        searchInput.value = '';
+        document.querySelectorAll('#muscle-filters input').forEach(cb => cb.checked = false);
+        document.querySelectorAll('#equipment-filters .filter-tag').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('#difficulty-filters .filter-tag').forEach(t => t.classList.remove('active'));
+        renderExercises();
+    });
+    
+    document.getElementById('modal-close-btn').addEventListener('click', () => modal.classList.remove('active'));
+    modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('active'); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('active'); });
+})();
+</script>
+
+<script src="global.js"></script>
+</body>
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Термінологія | Цифровий Атлет</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        .glossary-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 40px;
+            margin: 40px 0;
+        }
+        
+        .glossary-nav {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+        }
+        
+        .glossary-nav h4 {
+            font-family: 'Lora', serif;
+            font-size: 0.9rem;
+            margin: 0 0 15px 0;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .category-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 25px 0;
+        }
+        
+        .category-list li {
+            margin-bottom: 8px;
+        }
+        
+        .category-list a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        
+        .category-list a:hover {
+            color: var(--accent);
+        }
+        
+        .alphabet-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .alphabet-link {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #F2F3F0;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .alphabet-link:hover {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .alphabet-link.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        
+        .glossary-content {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 40px;
+        }
+        
+        .letter-section {
+            margin-bottom: 40px;
+            scroll-margin-top: 30px;
+        }
+        
+        .letter-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .letter-heading {
+            font-family: 'Lora', serif;
+            font-size: 2rem;
+            margin: 0 0 25px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent);
+            color: var(--accent);
+        }
+        
+        .term-block {
+            margin-bottom: 35px;
+            scroll-margin-top: 20px;
+        }
+        
+        .term-header {
+            display: flex;
+            align-items: baseline;
+            gap: 15px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .term-name {
+            font-family: 'Lora', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+        
+        .term-translation {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+        
+        .term-category {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            padding: 3px 10px;
+            background: #F2F3F0;
+            border-radius: 20px;
+        }
+        
+        .term-definition {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--text-main);
+            margin-bottom: 12px;
+        }
+        
+        .term-context {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            padding-left: 20px;
+            border-left: 2px solid var(--border-color);
+        }
+        
+        .term-context strong {
+            color: var(--text-main);
+            font-weight: 500;
+        }
+        
+        .back-to-top {
+            display: inline-block;
+            margin-top: 15px;
+            font-size: 0.8rem;
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--accent);
+            cursor: pointer;
+        }
+        
+        .back-to-top:hover {
+            border-bottom-style: solid;
+        }
+        
+        @media (max-width: 768px) {
+            .glossary-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .glossary-nav {
+                position: static;
+            }
+            
+            .glossary-content {
+                padding: 25px;
+            }
+            
+            .term-header {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="container">
+        <div class="logo">Цифровий Атлет.</div>
+        <nav class="main-nav">
+            <a href="index.html">Філософія</a>
+            <a href="glossary.html" style="color: var(--accent);">Термінологія</a>
+            <a href="anatomy.html">Анатомія</a>
+            <a href="biomechanics.html">Біомеханіка</a>
+            <a href="science.html">Біохімія</a>
+            <a href="plan.html" id="nav-protocol" style="display: none;">Протокол</a>
+            <a href="recovery.html">Безпека</a>
+            <a href="progress.html">Прогрес</a>
+            <a href="exercises.html">Вправи</a>
+            <a href="calculators.html">Калькулятори</a>
+            <a href="nutrition-guide.html">Нутриціологія</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <article class="hero-article">
+        <p class="meta-info">Довідковий розділ</p>
+        <h1 class="document-title">Термінологічний словник</h1>
+        <p class="lead-text">Систематизований перелік термінів з анатомії, біомеханіки, фізіології, нутриціології та теорії тренувань.</p>
+    </article>
+
+    <div class="glossary-layout">
+        <aside class="glossary-nav">
+            <h4>Категорії</h4>
+            <ul class="category-list">
+                <li><a href="#category-anatomy">Анатомія</a></li>
+                <li><a href="#category-biomechanics">Біомеханіка</a></li>
+                <li><a href="#category-physiology">Фізіологія</a></li>
+                <li><a href="#category-nutrition">Нутриціологія</a></li>
+                <li><a href="#category-training">Теорія тренувань</a></li>
+                <li><a href="#category-metrics">Метрики та формули</a></li>
+            </ul>
+            
+            <h4>Алфавітний покажчик</h4>
+            <div class="alphabet-nav" id="alphabet-nav"></div>
+        </aside>
+        
+        <div class="glossary-content" id="glossary-content"></div>
+    </div>
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        Цифровий Атлет &copy; 2026 — Термінологічний довідник
+    </div>
+</footer>
+
+<script>
+(function() {
+    const glossaryData = [
+        // АНАТОМІЯ
+        { name: 'Антеріор', translation: 'Anterior', definition: 'Передня поверхня тіла або органа. Протилежне — постеріор.', context: 'У контексті дельтоподібного м\'яза: антеріорна (передня) головка відповідає за згинання плеча.', category: 'Анатомія' },
+        { name: 'Дистальний', translation: 'Distal', definition: 'Розташований далі від центру тіла або місця прикріплення кінцівки.', context: 'Дистальний променево-ліктьовий суглоб бере участь у пронації та супінації передпліччя.', category: 'Анатомія' },
+        { name: 'Латеральний', translation: 'Lateral', definition: 'Розташований далі від серединної лінії тіла.', context: 'Латеральна головка трицепса формує зовнішній контур плеча.', category: 'Анатомія' },
+        { name: 'Медіальний', translation: 'Medial', definition: 'Розташований ближче до серединної лінії тіла.', context: 'Медіальна головка трицепса забезпечує стабільність ліктьового суглоба при жимових рухах.', category: 'Анатомія' },
+        { name: 'Постеріор', translation: 'Posterior', definition: 'Задня поверхня тіла або органа. Протилежне — антеріор.', context: 'Постеріорний ланцюг м\'язів включає трапеції, розгиначі хребта, сідничні, біцепс стегна.', category: 'Анатомія' },
+        { name: 'Проксимальний', translation: 'Proximal', definition: 'Розташований ближче до центру тіла або місця прикріплення кінцівки.', context: 'Проксимальний відділ стегнової кістки — ділянка, наближена до тазостегнового суглоба.', category: 'Анатомія' },
+        { name: 'Сухожилля', translation: 'Tendon', definition: 'Сполучнотканинне утворення, що з\'єднує м\'яз із кісткою та передає механічне зусилля.', context: 'Ахіллове сухожилля накопичує та вивільняє еластичну енергію під час бігу та стрибків.', category: 'Анатомія' },
+        { name: 'Фасція', translation: 'Fascia', definition: 'Щільна сполучнотканинна оболонка, що огортає м\'язи, групи м\'язів, судини та нерви.', context: 'Тораколюмбальна фасція відіграє ключову роль у передачі зусилля від нижніх кінцівок до верхніх під час станової тяги.', category: 'Анатомія' },
+        
+        // БІОМЕХАНІКА
+        { name: 'Важіль першого роду', translation: 'First-Class Lever', definition: 'Важіль, у якому точка опори розташована між точкою прикладання сили та точкою опору.', context: 'Утримання голови в нейтральному положенні: атланто-потиличний суглоб є точкою опори.', category: 'Біомеханіка' },
+        { name: 'Важіль другого роду', translation: 'Second-Class Lever', definition: 'Важіль, у якому опір розташований між точкою опори та точкою прикладання сили.', context: 'Підйом на носки: точка опори — пальці стопи, опір — вага тіла, сила — скорочення литкового м\'яза.', category: 'Біомеханіка' },
+        { name: 'Важіль третього роду', translation: 'Third-Class Lever', definition: 'Важіль, у якому сила прикладена між точкою опори та точкою опору.', context: 'Згинання руки на біцепс: точка опори — ліктьовий суглоб, сила — біцепс, опір — гантеля.', category: 'Біомеханіка' },
+        { name: 'Еластична енергія', translation: 'Elastic Energy', definition: 'Потенційна енергія, що накопичується в сухожиллях та фасціях при їх розтягуванні.', context: 'До 30% сили у вертикальному стрибку забезпечується за рахунок повернення еластичної енергії.', category: 'Біомеханіка' },
+        { name: 'Кінематичний ланцюг', translation: 'Kinematic Chain', definition: 'Система послідовно з\'єднаних сегментів тіла, рух у яких взаємопов\'язаний.', context: 'Закритий кінематичний ланцюг активує більше м\'язових груп, ніж відкритий.', category: 'Біомеханіка' },
+        { name: 'Момент сили', translation: 'Torque', definition: 'Добуток сили на плече сили. Визначає обертальний ефект сили відносно осі суглоба.', context: 'При присіданні момент сили в колінному суглобі залежить від ваги штанги та кута згинання коліна.', category: 'Біомеханіка' },
+        { name: 'Плече сили', translation: 'Moment Arm', definition: 'Найкоротша відстань від осі обертання суглоба до лінії дії сили.', context: 'Збільшення плеча сили при виконанні фронтальних підйомів гантелей підвищує навантаження на дельту.', category: 'Біомеханіка' },
+        { name: 'Цикл розтягування-скорочення', translation: 'Stretch-Shortening Cycle', definition: 'Механізм, при якому попередньо розтягнутий м\'яз генерує більшу силу при скороченні.', context: 'SSC є основою пліометричних вправ — стрибків у глибину, вибухових віджимань.', category: 'Біомеханіка' },
+        
+        // ФІЗІОЛОГІЯ
+        { name: 'Адаптивний термогенез', translation: 'Adaptive Thermogenesis', definition: 'Зниження базального метаболізму у відповідь на тривалий дефіцит калорій.', context: 'При екстремальних дефіцитах адаптивний термогенез може знизити BMR на 15-20%.', category: 'Фізіологія' },
+        { name: 'Атрофія', translation: 'Atrophy', definition: 'Зменшення об\'єму м\'язової тканини внаслідок недостатнього навантаження або дефіциту білка.', context: 'Атрофія від бездіяльності починається через 72 години повного спокою.', category: 'Фізіологія' },
+        { name: 'Гіпертрофія', translation: 'Hypertrophy', definition: 'Збільшення об\'єму м\'язових волокон у відповідь на механічне навантаження.', context: 'Міофібрилярна гіпертрофія збільшує скоротливі білки; саркоплазматична — внутрішньоклітинну рідину.', category: 'Фізіологія' },
+        { name: 'Глікоген', translation: 'Glycogen', definition: 'Полісахарид, форма зберігання глюкози в м\'язах та печінці.', context: 'Запаси глікогену в м\'язах становлять 300-500 г. Виснаження лімітує продуктивність.', category: 'Фізіологія' },
+        { name: 'Глюконеогенез', translation: 'Gluconeogenesis', definition: 'Синтез глюкози з невуглеводних попередників у печінці.', context: 'При низьковуглеводній дієті глюконеогенез підтримує рівень глюкози в крові.', category: 'Фізіологія' },
+        { name: 'Синтез м\'язового білка', translation: 'Muscle Protein Synthesis', definition: 'Процес утворення нових білкових молекул у м\'язовій тканині.', context: 'MPS підвищується після споживання білка та залишається підвищеним до 48 годин після тренування.', category: 'Фізіологія' },
+        
+        // НУТРИЦІОЛОГІЯ
+        { name: 'Базальний метаболізм', translation: 'Basal Metabolic Rate', definition: 'Мінімальна кількість енергії для підтримки життєдіяльності в стані спокою.', context: 'BMR становить 60-75% добових енерговитрат.', category: 'Нутриціологія' },
+        { name: 'Глікемічне навантаження', translation: 'Glycemic Load', definition: 'Добуток глікемічного індексу на кількість вуглеводів у порції, поділений на 100.', context: 'Кавун має високий ГІ (72), але низьке ГН (5) через малий вміст вуглеводів.', category: 'Нутриціологія' },
+        { name: 'Глікемічний індекс', translation: 'Glycemic Index', definition: 'Показник швидкості підвищення рівня глюкози в крові після споживання вуглеводів.', context: 'Низький ГІ — стабільна енергія; високий ГІ — швидке поповнення глікогену.', category: 'Нутриціологія' },
+        { name: 'Енергетичний баланс', translation: 'Energy Balance', definition: 'Співвідношення між калоріями, що надходять, та калоріями, що витрачаються.', context: 'Позитивний баланс — набір маси; негативний — втрата маси.', category: 'Нутриціологія' },
+        { name: 'Суха маса тіла', translation: 'Lean Body Mass', definition: 'Маса тіла за вирахуванням жирової тканини.', context: 'LBM є основним фактором, що визначає BMR.', category: 'Нутриціологія' },
+        
+        // ТЕОРІЯ ТРЕНУВАНЬ
+        { name: 'Відмова', translation: 'Muscular Failure', definition: 'Неможливість виконати ще одне повторення з правильною технікою.', context: 'Тренування до відмови збільшує метаболічний стрес, але підвищує ризик перетренованості.', category: 'Тренування' },
+        { name: 'Інтенсивність', translation: 'Intensity', definition: 'Відношення робочої ваги до одноповторного максимуму, виражене у відсотках.', context: '>85% — сила; 65-85% — гіпертрофія; <65% — витривалість.', category: 'Тренування' },
+        { name: 'Об\'єм тренування', translation: 'Training Volume', definition: 'Загальна кількість виконаної роботи: підходи × повторення × вага.', context: 'Для гіпертрофії рекомендовано 10-20 підходів на м\'язову групу на тиждень.', category: 'Тренування' },
+        { name: 'Періодизація', translation: 'Periodization', definition: 'Циклічна зміна об\'єму, інтенсивності та специфічності навантажень.', context: 'Лінійна: збільшення інтенсивності при зменшенні об\'єму. Хвильова: варіювання в межах тижня.', category: 'Тренування' },
+        { name: 'Суперкомпенсація', translation: 'Supercompensation', definition: 'Фаза відновлення, коли функціональні показники перевищують початковий рівень.', context: 'Наступне тренування оптимально планувати на піку суперкомпенсації.', category: 'Тренування' },
+        { name: 'RIR', translation: 'Reps in Reserve', definition: 'Кількість повторень, які атлет міг би ще виконати до відмови.', context: 'RIR 2 означає завершення підходу із запасом у 2 повторення.', category: 'Тренування' },
+        { name: 'RPE', translation: 'Rating of Perceived Exertion', definition: 'Суб\'єктивна шкала оцінки зусилля від 1 до 10.', context: 'RPE 7-8 — 2-3 повторення в запасі; RPE 9 — 1 повторення в запасі.', category: 'Тренування' },
+        
+        // МЕТРИКИ
+        { name: 'TDEE', translation: 'Total Daily Energy Expenditure', definition: 'Загальна кількість калорій, яку організм витрачає за добу.', context: 'TDEE = BMR × коефіцієнт активності (1.2-1.9).', category: 'Метрики' },
+        { name: 'Wilks Coefficient', translation: 'Wilks Score', definition: 'Коефіцієнт для порівняння результатів пауерліфтерів різної ваги.', context: 'Wilks = Сума × (500 / поліноміальна функція від ваги атлета).', category: 'Метрики' },
+        { name: '1RM', translation: 'One-Repetition Maximum', definition: 'Максимальна вага в одному повторенні з правильною технікою.', context: 'Розраховується за формулами Бжицькі, Еплі, Лендер на основі субмаксимальних підходів.', category: 'Метрики' }
+    ];
+    
+    // Sort by Ukrainian alphabet
+    glossaryData.sort((a, b) => a.name.localeCompare(b.name, 'uk'));
+    
+    // Group by first letter
+    const groupedByLetter = {};
+    const usedLetters = new Set();
+    
+    glossaryData.forEach(term => {
+        const firstLetter = term.name.charAt(0).toUpperCase();
+        usedLetters.add(firstLetter);
+        if (!groupedByLetter[firstLetter]) {
+            groupedByLetter[firstLetter] = [];
+        }
+        groupedByLetter[firstLetter].push(term);
+    });
+    
+    // Also group by category for category navigation
+    const groupedByCategory = {};
+    glossaryData.forEach(term => {
+        if (!groupedByCategory[term.category]) {
+            groupedByCategory[term.category] = [];
+        }
+        groupedByCategory[term.category].push(term);
+    });
+    
+    function renderGlossary() {
+        const container = document.getElementById('glossary-content');
+        let html = '';
+        
+        // Render by category sections
+        Object.entries(groupedByCategory).forEach(([category, terms]) => {
+            const categoryId = category.toLowerCase().replace(/\s+/g, '-');
+            html += `<section class="letter-section" id="category-${categoryId}">`;
+            html += `<h2 class="letter-heading">${category}</h2>`;
+            
+            terms.sort((a, b) => a.name.localeCompare(b.name, 'uk')).forEach(term => {
+                html += `
+                    <div class="term-block" id="term-${term.name.toLowerCase().replace(/\s+/g, '-')}">
+                        <div class="term-header">
+                            <span class="term-name">${term.name}</span>
+                            <span class="term-translation">${term.translation}</span>
+                            <span class="term-category">${term.category}</span>
+                        </div>
+                        <div class="term-definition">${term.definition}</div>
+                        <div class="term-context"><strong>Контекст:</strong> ${term.context}</div>
+                    </div>
+                `;
+            });
+            
+            html += `<a class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑ До початку</a>`;
+            html += '</section>';
+        });
+        
+        container.innerHTML = html;
+    }
+    
+    function renderAlphabetNav() {
+        const nav = document.getElementById('alphabet-nav');
+        const alphabet = 'АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ'.split('');
+        
+        alphabet.forEach(letter => {
+            const link = document.createElement('a');
+            link.className = 'alphabet-link';
+            link.textContent = letter;
+            
+            // Find if there are terms starting with this letter
+            const hasTerms = glossaryData.some(term => term.name.charAt(0).toUpperCase() === letter);
+            
+            if (hasTerms) {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // Find first term with this letter
+                    const firstTerm = glossaryData.find(term => term.name.charAt(0).toUpperCase() === letter);
+                    if (firstTerm) {
+                        const element = document.getElementById(`term-${firstTerm.name.toLowerCase().replace(/\s+/g, '-')}`);
+                        if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }
+                });
+            } else {
+                link.classList.add('disabled');
+            }
+            
+            nav.appendChild(link);
+        });
+    }
+    
+    renderGlossary();
+    renderAlphabetNav();
+})();
+</script>
+
+<script src="global.js"></script>
+</body>
+</html>

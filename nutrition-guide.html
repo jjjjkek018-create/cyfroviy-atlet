@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Нутриціологія | Цифровий Атлет</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        .content-block {
+            margin: 60px 0;
+        }
+        
+        .section-title {
+            font-family: 'Lora', serif;
+            font-size: 1.8rem;
+            margin: 40px 0 20px 0;
+            color: var(--text-main);
+        }
+        
+        .subsection-title {
+            font-family: 'Lora', serif;
+            font-size: 1.3rem;
+            margin: 30px 0 15px 0;
+            color: var(--accent);
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.95rem;
+        }
+        
+        .data-table th {
+            text-align: left;
+            padding: 12px 0;
+            border-bottom: 2px solid var(--border-color);
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.75rem;
+        }
+        
+        .data-table td {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .callout {
+            background: #F8F9F6;
+            padding: 25px 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border-left: 3px solid var(--accent);
+        }
+        
+        .callout.warning {
+            background: #FDF6F0;
+            border-left-color: #c0392b;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .comparison-item {
+            padding: 25px;
+            border-radius: 12px;
+        }
+        
+        .comparison-item.correct {
+            background: #F2F7F2;
+            border: 1px solid #D4E8D4;
+        }
+        
+        .comparison-item.incorrect {
+            background: #FDF6F6;
+            border: 1px solid #F0D4D4;
+        }
+        
+        .comparison-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .value-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        
+        .value-number {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: var(--accent);
+            line-height: 1.2;
+        }
+        
+        .value-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+        
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 30px 0;
+        }
+        
+        .toc-link {
+            padding: 12px 0;
+            color: var(--text-main);
+            text-decoration: none;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        
+        .toc-link:hover {
+            color: var(--accent);
+        }
+        
+        .macro-breakdown {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .macro-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .macro-row:last-child {
+            border-bottom: none;
+        }
+        
+        .macro-name {
+            font-weight: 500;
+        }
+        
+        .macro-value {
+            color: var(--text-muted);
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .toc-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="container">
+        <div class="logo">Цифровий Атлет.</div>
+        <nav class="main-nav">
+            <a href="index.html">Філософія</a>
+            <a href="glossary.html">Термінологія</a>
+            <a href="anatomy.html">Анатомія</a>
+            <a href="biomechanics.html">Біомеханіка</a>
+            <a href="science.html">Біохімія</a>
+            <a href="plan.html" id="nav-protocol" style="display: none;">Протокол</a>
+            <a href="recovery.html">Безпека</a>
+            <a href="progress.html">Прогрес</a>
+            <a href="exercises.html">Вправи</a>
+            <a href="calculators.html">Калькулятори</a>
+            <a href="nutrition-guide.html" style="color: var(--accent);">Нутриціологія</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <article class="hero-article">
+        <p class="meta-info">Розділ 09 &mdash; Метаболічна точність</p>
+        <h1 class="document-title">Нутриціологія: принципи обліку</h1>
+        <p class="lead-text">Методологія точного зважування, розрахунку макронутрієнтів та аналізу складу продуктів для контролю композиції тіла.</p>
+    </article>
+
+    <!-- Table of Contents -->
+    <div style="margin: 40px 0;">
+        <p class="meta-info" style="margin-bottom: 20px;">Структура розділу</p>
+        <div class="toc-grid">
+            <a href="#weighing" class="toc-link">01. Зважування: методологія</a>
+            <a href="#macros" class="toc-link">02. Макронутрієнти</a>
+            <a href="#micros" class="toc-link">03. Мікронутрієнти</a>
+            <a href="#labels" class="toc-link">04. Аналіз етикеток</a>
+            <a href="#mealprep" class="toc-link">05. Планування раціону</a>
+            <a href="#timing" class="toc-link">06. Таймінг нутрієнтів</a>
+            <a href="#supplements" class="toc-link">07. Добавки: доказова база</a>
+            <a href="#reference" class="toc-link">08. Довідкові таблиці</a>
+        </div>
+    </div>
+
+    <!-- Section 1: Weighing Methodology -->
+    <section id="weighing" class="content-block">
+        <h2 class="section-title">01. Зважування: методологія точності</h2>
+        
+        <p>Дослідження послідовно демонструють систематичну помилку при оцінці порцій «на око». У середньому, люди недооцінюють калорійність спожитої їжі на 20–47% залежно від вибірки. Для атлета, який працює з дефіцитом або профіцитом у 300–500 ккал, така похибка нівелює весь сенс дієтичного втручання.</p>
+        
+        <div class="comparison-grid">
+            <div class="comparison-item incorrect">
+                <div class="comparison-label" style="color: #c0392b;">Оцінка без ваг</div>
+                <p style="margin-bottom: 15px;"><strong>Суб'єктивне сприйняття:</strong> 100 г сухого рису</p>
+                <p style="margin-bottom: 15px;"><strong>Фактична вага при зважуванні:</strong> 140–180 г</p>
+                <p style="margin-bottom: 0;"><strong>Похибка за день:</strong> +140–280 ккал</p>
+            </div>
+            <div class="comparison-item correct">
+                <div class="comparison-label" style="color: var(--accent);">Інструментальний метод</div>
+                <p style="margin-bottom: 15px;"><strong>Відважено:</strong> 100 г сухого рису</p>
+                <p style="margin-bottom: 15px;"><strong>Фактична вага:</strong> 100 г</p>
+                <p style="margin-bottom: 0;"><strong>Похибка:</strong> відсутня</p>
+            </div>
+        </div>
+        
+        <div class="callout">
+            <p style="margin: 0;"><strong>Правило:</strong> Зважування виконується виключно у сирому (сухому) стані до термічної обробки. Вода, яку вбирає продукт при варінні, змінює вагу, але не калорійність.</p>
+        </div>
+        
+        <h3 class="subsection-title">Необхідне обладнання</h3>
+        <ul style="margin-bottom: 30px;">
+            <li style="margin-bottom: 10px;"><strong>Електронні кухонні ваги</strong> з дискретністю 1 г та функцією тарування.</li>
+            <li style="margin-bottom: 10px;"><strong>Мірний посуд</strong> для рідин та сипучих продуктів малої щільності.</li>
+            <li style="margin-bottom: 10px;"><strong>Програмне забезпечення</strong> для трекінгу (FatSecret, Cronometer).</li>
+        </ul>
+        
+        <h3 class="subsection-title">Алгоритм для складних страв</h3>
+        <ol style="margin-bottom: 0;">
+            <li style="margin-bottom: 12px;">Зважити всі сирі інгредієнти до початку приготування.</li>
+            <li style="margin-bottom: 12px;">Після термічної обробки зважити готову страву повністю.</li>
+            <li style="margin-bottom: 12px;">Розрахувати калорійність на 100 г готового продукту: (сума калорій сирих інгредієнтів / вага готової страви) × 100.</li>
+            <li>При порціонуванні зважувати необхідну кількість готової страви та множити на коефіцієнт.</li>
+        </ol>
+    </section>
+
+    <!-- Section 2: Macronutrients -->
+    <section id="macros" class="content-block">
+        <h2 class="section-title">02. Макронутрієнти: функції та норми</h2>
+        
+        <h3 class="subsection-title">Білок</h3>
+        <p>Структурний компонент м'язової тканини, ферментів та гормонів. При дефіциті калорій достатнє споживання білка (1.6–2.4 г/кг) мінімізує втрату сухої маси. При профіциті — забезпечує субстрат для гіпертрофії.</p>
+        
+        <table class="data-table">
+            <thead>
+                <tr><th>Джерело (сире)</th><th>Білок (г/100г)</th><th>Примітка</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Куряча грудка</td><td>23.0</td><td>Еталонний профіль амінокислот</td></tr>
+                <tr><td>Яловичина (пісна)</td><td>21.0</td><td>Додатково: залізо, креатин</td></tr>
+                <tr><td>Лосось атлантичний</td><td>20.0</td><td>EPA/DHA у складі жирів</td></tr>
+                <tr><td>Яйце куряче (2 шт)</td><td>12.0</td><td>Біодоступність ~94%</td></tr>
+                <tr><td>Сир кисломолочний 5%</td><td>16.0</td><td>Казеїн (повільне засвоєння)</td></tr>
+                <tr><td>Сочевиця (варена)</td><td>9.0</td><td>Рослинний білок, неповний амінопрофіль</td></tr>
+            </tbody>
+        </table>
+        
+        <h3 class="subsection-title">Жири</h3>
+        <p>Структурний компонент клітинних мембран, прекурсор стероїдних гормонів. Мінімальне споживання для підтримки ендокринної функції становить 0.8–1.0 г/кг.</p>
+        
+        <table class="data-table">
+            <thead>
+                <tr><th>Джерело</th><th>Жири (г/100г)</th><th>Тип жирних кислот</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Оливкова олія</td><td>100.0</td><td>Мононенасичені (олеїнова)</td></tr>
+                <tr><td>Авокадо</td><td>15.0</td><td>Мононенасичені</td></tr>
+                <tr><td>Мигдаль</td><td>50.0</td><td>Мононенасичені + вітамін E</td></tr>
+                <tr><td>Волоський горіх</td><td>65.0</td><td>Поліненасичені (ALA)</td></tr>
+                <tr><td>Лосось</td><td>13.0</td><td>EPA/DHA</td></tr>
+                <tr><td>Насіння льону</td><td>42.0</td><td>ALA</td></tr>
+            </tbody>
+        </table>
+        
+        <div class="callout warning">
+            <p style="margin: 0;"><strong>Контроль порцій.</strong> Жири мають найвищу калорійну щільність серед макронутрієнтів (9 ккал/г). 100 г горіхів містять 600–650 ккал. Обов'язкове зважування.</p>
+        </div>
+        
+        <h3 class="subsection-title">Вуглеводи</h3>
+        <p>Основне джерело енергії для високоінтенсивної роботи. Заповнення глікогенових депо критичне для підтримки тренувального об'єму. Розрізняють складні (низький глікемічний індекс) та прості (високий ГІ).</p>
+        
+        <table class="data-table">
+            <thead>
+                <tr><th>Джерело (сухе)</th><th>Вуглеводи (г/100г)</th><th>Глікемічний індекс</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Вівсяні пластівці</td><td>66.0</td><td>55 (середній)</td></tr>
+                <tr><td>Гречка</td><td>72.0</td><td>50 (низький)</td></tr>
+                <tr><td>Рис бурий</td><td>77.0</td><td>50 (низький)</td></tr>
+                <tr><td>Рис білий</td><td>80.0</td><td>70 (високий)</td></tr>
+                <tr><td>Макарони (тверді сорти)</td><td>72.0</td><td>45 (низький)</td></tr>
+                <tr><td>Батат</td><td>20.0</td><td>55 (середній)</td></tr>
+                <tr><td>Картопля</td><td>17.0</td><td>78 (високий)</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Section 3: Micronutrients -->
+    <section id="micros" class="content-block">
+        <h2 class="section-title">03. Мікронутрієнти: критичний мінімум</h2>
+        
+        <p>На відміну від макронутрієнтів, мікронутрієнти не є джерелом енергії, але виступають кофакторами метаболічних реакцій. Дефіцит окремих елементів (Mg, Zn, Fe, D3) може лімітувати відновлення та спортивну продуктивність навіть при достатньому калоражі.</p>
+        
+        <table class="data-table">
+            <thead>
+                <tr><th>Нутрієнт</th><th>Функція</th><th>Джерела</th><th>RDA (дорослі)</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Вітамін D3</td><td>Мінералізація кісткової тканини, імуномодуляція, синтез тестостерону</td><td>Жирна риба, яєчний жовток, синтез у шкірі</td><td>600–2000 МО</td></tr>
+                <tr><td>Магній</td><td>М'язове розслаблення, нервова провідність, якість сну</td><td>Гарбузове насіння, мигдаль, шпинат</td><td>400–420 мг</td></tr>
+                <tr><td>Цинк</td><td>Синтез білка, імунна функція, сперматогенез</td><td>Яловичина, устриці, гарбузове насіння</td><td>11 мг</td></tr>
+                <tr><td>Залізо</td><td>Транспорт кисню (гемоглобін), еритропоез</td><td>Червоне м'ясо, печінка, бобові</td><td>8–18 мг</td></tr>
+                <tr><td>Кальцій</td><td>М'язове скорочення, щільність кісткової тканини</td><td>Молочні продукти, кунжут, сардини</td><td>1000 мг</td></tr>
+                <tr><td>Калій</td><td>Електролітний баланс, артеріальний тиск</td><td>Батат, банани, картопля, авокадо</td><td>3500–4700 мг</td></tr>
+            </tbody>
+        </table>
+        
+        <div class="callout">
+            <p style="margin: 0;">Стратегія закриття потреб без добавок: 600–800 г овочів та фруктів різних кольорових груп щоденно; жирна риба 2–3 рази на тиждень; горіхи та насіння в першій половині дня; використання йодованої солі.</p>
+        </div>
+    </section>
+
+    <!-- Section 4: Label Analysis -->
+    <section id="labels" class="content-block">
+        <h2 class="section-title">04. Аналіз етикеток: що перевіряти</h2>
+        
+        <p>Маркування харчових продуктів регулюється законодавством, однак маркетингові формулювання («фітнес», «без цукру», «натуральний») не є надійними індикаторами якості. Аналіз проводиться виключно за таблицею харчової цінності та списком інгредієнтів.</p>
+        
+        <div class="macro-breakdown">
+            <p class="meta-info" style="margin-bottom: 20px;">Послідовність аналізу</p>
+            <div class="macro-row">
+                <span class="macro-name">Розмір порції</span>
+                <span class="macro-value">Вага однієї порції та кількість порцій в упаковці. Часто реальна порція менша за маркетингову.</span>
+            </div>
+            <div class="macro-row">
+                <span class="macro-name">Калорійність</span>
+                <span class="macro-value">На 100 г продукту для порівняння аналогів.</span>
+            </div>
+            <div class="macro-row">
+                <span class="macro-name">Білок</span>
+                <span class="macro-value">Цільовий показник: >10 г білка на 100 ккал для білкових продуктів.</span>
+            </div>
+            <div class="macro-row">
+                <span class="macro-name">Жири (насичені)</span>
+                <span class="macro-value">Обмеження насичених жирів до 10% добового калоражу.</span>
+            </div>
+            <div class="macro-row">
+                <span class="macro-name">Вуглеводи (цукри)</span>
+                <span class="macro-value">«З яких цукри» — якщо >10 г на порцію, продукт не для регулярного вжитку.</span>
+            </div>
+            <div class="macro-row">
+                <span class="macro-name">Клітковина</span>
+                <span class="macro-value">Чим більше, тим краще. Віднімається із загальних вуглеводів при розрахунку чистих вуглеводів.</span>
+            </div>
+        </div>
+        
+        <div class="callout warning">
+            <p style="margin: 0;"><strong>Список інгредієнтів.</strong> Інгредієнти перераховані в порядку зменшення масової частки. Якщо цукор (або його аналоги: глюкозно-фруктозний сироп, мальтодекстрин) у першій трійці — продукт слід обмежити.</p>
+        </div>
+    </section>
+
+    <!-- Section 5: Meal Prep -->
+    <section id="mealprep" class="content-block">
+        <h2 class="section-title">05. Планування раціону</h2>
+        
+        <p>Попереднє приготування їжі на 3–5 днів усуває необхідність щоденного прийняття рішень щодо харчування та знижує ймовірність імпульсивних відхилень від плану. Метод особливо ефективний при роботі з дефіцитом калорій, де кожні 100 ккал мають значення.</p>
+        
+        <h3 class="subsection-title">Протокол</h3>
+        <ol style="margin-bottom: 30px;">
+            <li style="margin-bottom: 12px;">Розрахунок макросів на тиждень вперед на основі TDEE та поточної цілі.</li>
+            <li style="margin-bottom: 12px;">Складання списку продуктів та закупівля.</li>
+            <li style="margin-bottom: 12px;">Паралельне приготування: духовка (білкові джерела, овочі), варильна поверхня (крупи), блендер (соуси).</li>
+            <li style="margin-bottom: 12px;">Порціонування з фіксацією ваги кожного компонента в контейнері.</li>
+            <li style="margin-bottom: 0;">Зберігання: 2–3 дні в холодильнику (+2…+4°C), решта в морозильній камері (-18°C).</li>
+        </ol>
+        
+        <div class="callout">
+            <p style="margin: 0;">Розморожування виконується в холодильнику протягом 8–12 годин. Повторне заморожування після розморожування не допускається.</p>
+        </div>
+    </section>
+
+    <!-- Section 6: Nutrient Timing -->
+    <section id="timing" class="content-block">
+        <h2 class="section-title">06. Таймінг нутрієнтів</h2>
+        
+        <p>Хоча загальний добовий баланс макросів є визначальним фактором, розподіл нутрієнтів відносно тренувального вікна може впливати на продуктивність та швидкість відновлення глікогену.</p>
+        
+        <table class="data-table">
+            <thead>
+                <tr><th>Період</th><th>Рекомендація</th><th>Приклад</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>За 2–3 год до</td>
+                    <td>Складні вуглеводи + білок. Мінімум жирів та клітковини для швидкої евакуації зі шлунка.</td>
+                    <td>Вівсянка на воді, 2 яйця</td>
+                </tr>
+                <tr>
+                    <td>За 30–60 хв до</td>
+                    <td>Прості вуглеводи (опціонально, при високоінтенсивних тренуваннях).</td>
+                    <td>Банан, фініки</td>
+                </tr>
+                <tr>
+                    <td>Під час (якщо >90 хв)</td>
+                    <td>Вуглеводно-електролітний розчин (ізотонік) для підтримки глікемії та гідратації.</td>
+                    <td>30–60 г вуглеводів/год</td>
+                </tr>
+                <tr>
+                    <td>Протягом 2 год після</td>
+                    <td>Білок (0.4–0.5 г/кг) + вуглеводи (0.8–1.2 г/кг) для ресинтезу глікогену та стимуляції синтезу м'язового білка.</td>
+                    <td>Курка з рисом, або протеїновий коктейль з бананом</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Section 7: Supplements -->
+    <section id="supplements" class="content-block">
+        <h2 class="section-title">07. Добавки: доказова база</h2>
+        
+        <p>Спортивне харчування не компенсує недоліки базового раціону. Нижче наведено класифікацію добавок за рівнем доказовості згідно з позицією ISSN (International Society of Sports Nutrition).</p>
+        
+        <div class="comparison-grid" style="margin-top: 30px;">
+            <div class="comparison-item correct">
+                <div class="comparison-label" style="color: var(--accent);">Категорія A: Підтверджена ефективність</div>
+                <ul style="margin: 0; padding-left: 20px;">
+                    <li style="margin-bottom: 10px;"><strong>Креатин моногідрат</strong> — 5 г/добу. Збільшення силових показників та об'єму м'язової тканини.</li>
+                    <li style="margin-bottom: 10px;"><strong>Протеїн (сироватковий)</strong> — для добору добової норми білка.</li>
+                    <li style="margin-bottom: 10px;"><strong>Кофеїн</strong> — 3–6 мг/кг за 30–60 хв до навантаження. Ергогенний ефект.</li>
+                    <li style="margin-bottom: 0;"><strong>Бета-аланін</strong> — 3–5 г/добу. Підвищення буферної ємності м'язів.</li>
+                </ul>
+            </div>
+            <div class="comparison-item incorrect">
+                <div class="comparison-label" style="color: #c0392b;">Категорія C: Неефективні / недостатньо даних</div>
+                <ul style="margin: 0; padding-left: 20px;">
+                    <li style="margin-bottom: 10px;"><strong>BCAA</strong> — не мають переваг перед повноцінним білком при достатньому споживанні останнього.</li>
+                    <li style="margin-bottom: 10px;"><strong>L-карнітин (перорально)</strong> — не впливає на окислення жирів у здорових людей.</li>
+                    <li style="margin-bottom: 10px;"><strong>Глютамін</strong> — не показав впливу на синтез м'язового білка.</li>
+                    <li style="margin-bottom: 0;"><strong>Трибулус террестріс</strong> — не впливає на рівень тестостерону.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 8: Reference -->
+    <section id="reference" class="content-block">
+        <h2 class="section-title">08. Довідкові величини</h2>
+        
+        <div class="value-grid">
+            <div class="value-card">
+                <div class="value-number">1.6–2.2</div>
+                <div class="value-label">Білок (г/кг)</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">для збереження/набору м'язової маси</div>
+            </div>
+            <div class="value-card">
+                <div class="value-number">0.8–1.2</div>
+                <div class="value-label">Жири (г/кг)</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">мінімум для гормональної функції</div>
+            </div>
+            <div class="value-card">
+                <div class="value-number">30–40</div>
+                <div class="value-label">Вода (мл/кг)</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">базова потреба без урахування тренувань</div>
+            </div>
+            <div class="value-card">
+                <div class="value-number">25–35</div>
+                <div class="value-label">Клітковина (г)</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">добова норма для здорового травлення</div>
+            </div>
+        </div>
+        
+        <h3 class="subsection-title">Візуальні еквіваленти (для вимушених ситуацій)</h3>
+        <table class="data-table">
+            <thead>
+                <tr><th>Продукт</th><th>Маса</th><th>Орієнтир</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>М'ясо / риба (готова)</td><td>100–120 г</td><td>Розмір долоні без пальців</td></tr>
+                <tr><td>Сир твердий</td><td>30 г</td><td>Розмір великого пальця</td></tr>
+                <tr><td>Горіхи / насіння</td><td>15–20 г</td><td>Жменя (долоня «човником»)</td></tr>
+                <tr><td>Олія</td><td>10 г</td><td>1 столова ложка</td></tr>
+                <tr><td>Гарнір (рис, паста)</td><td>150–200 г</td><td>Об'єм тенісного м'яча</td></tr>
+                <tr><td>Овочі нарізані</td><td>100 г</td><td>Дві складені разом долоні</td></tr>
+            </tbody>
+        </table>
+        
+        <div class="callout" style="margin-top: 30px;">
+            <p style="margin: 0;"><strong>Застереження:</strong> Візуальні еквіваленти наведено виключно для ситуацій, коли зважування неможливе. Систематична похибка такого методу оцінки становить 20–40%.</p>
+        </div>
+    </section>
+
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        Цифровий Атлет &copy; 2026 — Нутриціологія та метаболічна точність
+    </div>
+</footer>
+
+<script src="global.js"></script>
+</body>
+</html>
